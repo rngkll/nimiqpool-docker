@@ -1,0 +1,3 @@
+[submodule "mining-pool"]
+	path = mining-pool
+	url = https://github.com/nimiq-network/mining-pool.git
