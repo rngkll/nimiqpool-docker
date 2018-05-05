@@ -1,3 +1,5 @@
 *.crt
 *.cer
 *.key
+node_modules
+*.swp

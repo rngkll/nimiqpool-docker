@@ -1,0 +1,15 @@
+{
+	"raw": {
+		"connected": 100,
+		"hashpower": 1000000,
+		"fee": 0.01,
+		"rewards": 4000
+	},
+	"formatted": {
+		"connected": 100,
+		"hashpower": "1 Mh/s",
+		"fee": "1%",
+		"rewards": 4000,
+		"expected": "40 NIM"
+	}
+}
