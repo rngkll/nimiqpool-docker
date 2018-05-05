@@ -1,1 +1,106 @@
-Hello world!
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nimiq Miner</title>
+		<style>
+			html {
+				--logo-height: 60px;
+				--logo-width: 64px;
+				--overlay-offset: var(--logo-width);
+				--cell-size: 135px; 
+			}
+			body {
+				margin: 2em;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				color: rgba(255,255,255,.9);
+				text-rendering: optimizeLegibility;
+				overflow-x: hidden;
+				background-image: linear-gradient(30deg, #3023AE, #9C58CB);
+				background-size: cover;
+				background-attachment: fixed;
+			}
+			.logo {
+				--logo-padding: 16px;
+				height: var(--logo-height);
+				box-sizing: border-box;
+				padding: 16px;
+				padding-left: var(--logo-width);
+				background-size: 34px 30px;
+				background-position: 16px;
+				font-size: 17px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				display: inline-flex;
+				align-items: center;
+				color: white;
+				z-index: 1;
+				text-decoration: none;
+				user-select: none;
+				-webkit-tap-highlight-color: transparent;
+				outline: none !important;
+				background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="499" height="440"><path fill="%23FFC107" fill-rule="evenodd" d="M389 21c-6-12-23-21-36-21H145c-13 0-29 9-36 21L5 199c-6 11-6 30 0 41l104 178c7 12 23 21 36 21h208c14 0 30-9 36-21l104-178c7-11 7-30 0-41L389 21zM273 347v42h-39v-40c-24-3-52-13-70-30l25-39c21 15 38 23 57 23 23 0 33-9 33-28 0-40-106-39-106-111 0-38 23-65 61-73V51h39v40c25 3 44 16 59 32l-29 33c-15-13-27-20-44-20-19 0-29 8-29 26 0 37 105 34 105 110 0 37-21 67-62 75z"/></svg>');
+				background-repeat: no-repeat;
+			}
+			main {
+				max-width: 100%;
+				width: 20em;
+				padding: 1em;
+			}
+			h1 {
+				letter-spacing: 2px;
+				font-weight: 300;
+				font-size: calc(var(--cell-size) / 5.5);
+				margin: 0.3em 0;
+			}
+			p {
+				font-size: calc(var(--cell-size) / 11.8);
+				margin: 0.3em 0;
+				letter-spacing: 0.05em;
+				color: rgba(255,255,255,0.8);
+				font-weight: 300;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="logo"> Nimiq </div>
+		<main>
+			<h1>Welcome to your Nimiq Mining Pool!</h1>
+			<p>Currently <span id="stats-connected"></span> miners are connected producing <span id="stats-hashpower"></span> in hashing power!</p>
+			<p>The pool fee is <span id="stats-fee"></span> and with an average hash rate you can expect <span id="stats-expected"></span> per day.</p>
+		</main>
+
+		<script type="module">
+			const $ = document.querySelector.bind(document), $$ = document.querySelectorAll.bind(document);
+
+			async function updateStats() {
+				//showStats(loadStats());
+				const stats = await loadStats();
+				showStats(stats);
+			}
+
+			async function loadStats() {
+				//return await (await fetch('metrics.json', { mode: 'no-cors' })).json();
+				const response = await fetch('metrics.json')
+				return response.json();
+			}
+
+			function showStats(stats = { formatted: {} }) {
+				for (let key in stats.formatted) {
+					let element = $(`#stats-${key}`);
+					if (element) {
+						element.innerText = stats.formatted[key];
+					}
+				}
+			}
+
+			updateStats();
+			setInterval(updateStats, 1000);
+		</script>
+	</body>
+</html>
