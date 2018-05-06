@@ -1,5 +1,6 @@
 *.crt
 *.cer
 *.key
-node_modules
 *.swp
+node_modules
+configs/*.conf
