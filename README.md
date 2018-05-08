@@ -2,14 +2,20 @@ git submodule init
 
 # Installation steps
 
+First, get the source code and set up all dependecies
+```
+git clone https://github.com/rngkll/nimiqpool-docker
+cd nimiqpool-docker/
+git submodule init --remote
+```
+
 ## Docker
 
-You need docker and docker-compose to run the pool.
-
+Secondly, go to [docker.com](https://www.docker.com/community-edition) and follow the steps to install Docker. Unless you're on Mac or Windows, you'll need to manually install Docker Compose by following [these steps](https://docs.docker.com/compose/install/).
 
 ## Get cerfiticates for the pool
 
-You need a way to get SSL/TLS certificates, [Letsencrypt](https://letsencrypt.org) gives you the ability to get a free certificate, [Certbot](https://certbot.eff.org) is the recommended way to generate a certificate with Letsencrypt.
+To enable secure connections to your machine, SSL/TLS certificates are needed. [Letsencrypt](https://letsencrypt.org) gives you the ability to get a free certificate, [Certbot](https://certbot.eff.org) is the recommended way to generate a certificate with Letsencrypt.
 
 ## Change configuration files.
 
