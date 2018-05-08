@@ -4,3 +4,6 @@
 *.swp
 node_modules
 configs/*.conf
+main-full-consensus
+peer-key
+wallet
