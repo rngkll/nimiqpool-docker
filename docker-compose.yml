@@ -50,9 +50,6 @@ services:
       - "8444:8444"
     expose:
       - "8442"
-    environment:
-      - SERVER_HOST=my.domain
-      - SERVER_PORT=8444
     command: /bin/bash -c "yarn install && node index.js --config=server.conf"
   
   service:
