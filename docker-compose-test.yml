@@ -1,0 +1,84 @@
+version: '3'
+volumes:
+  dbdata:
+
+services:
+  # Docker can be used for test
+  # debian:
+  #   image: debian
+  #   command: "tail -f /dev/null"
+
+  web:
+    image: nginx
+    depends_on:
+      - "server"
+      - "service"
+    volumes:
+      - ./configs/site.template:/etc/nginx/conf.d/site.template:ro
+      - ./site:/var/www/html:ro
+      - ./configs/my.domain.key:/etc/nginx/certs/my.domain.key:ro
+      - ./configs/my.domain.cer:/etc/nginx/certs/my.domain.cer:ro
+    ports:
+      - "8080:80"
+      - "8443:443"
+    command: /bin/bash -c "cat /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    expose:
+      - "3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./mining-pool/sql/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
+      - ./configs/set_db_extra.sql:/docker-entrypoint-initdb.d/set_extra.sql:ro
+
+  server:
+    image: "node:9"
+    depends_on:
+      - "db"
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - ./mining-pool:/home/node/app
+      - ./test-configs/server.conf:/home/node/app/server.conf:ro
+      - ./configs/my.domain.cer:/home/node/app/my.domain.cer:ro
+      - ./configs/my.domain.key:/home/node/app/my.domain.key:ro
+    ports:
+      - "8444:8444"
+    expose:
+      - "8442"
+    command: /bin/bash -c "yarn install && node index.js --config=server.conf"
+  
+  service:
+    image: "node:9"
+    depends_on:
+      - "db"
+      - "server"
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - ./mining-pool:/home/node/app
+      - ./test-configs/service.conf:/home/node/app/service.conf:ro
+      - ./configs/my.domain.cer:/home/node/app/my.domain.cer:ro
+      - ./configs/my.domain.key:/home/node/app/my.domain.key:ro
+    command: /bin/bash -c "node index.js --config=service.conf"
+  
+  payout:
+    image: "node:9"
+    depends_on:
+      - "db"
+      - "server"
+      - "service"
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - ./mining-pool:/home/node/app
+      - ./test-configs/payout.conf:/home/node/app/payout.conf:ro
+      - ./configs/my.domain.cer:/home/node/app/my.domain.cer:ro
+      - ./configs/my.domain.key:/home/node/app/my.domain.key:ro
+    ports:
+      - "9229:9229"
+    command: /bin/bash -c "node-debug --debug-brk index.js --config=payout.conf"
