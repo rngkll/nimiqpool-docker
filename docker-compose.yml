@@ -79,4 +79,4 @@ services:
       - ./configs/payout.conf:/home/node/app/payout.conf:ro
       - ./configs/my.domain.cer:/home/node/app/my.domain.cer:ro
       - ./configs/my.domain.key:/home/node/app/my.domain.key:ro
-    command: /bin/bash -c "node index.js --config=payout.conf"
+    command: /bin/bash -c "tail -f /dev/null"
