@@ -22,6 +22,6 @@ server {
     ssl_certificate /etc/nginx/certs/my.domain.cer;
 
     location /metrics {
-        proxy_pass http://server:8442/;
+        proxy_pass https://server:8442/;
     }
 }
