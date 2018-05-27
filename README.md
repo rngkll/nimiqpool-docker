@@ -1,26 +1,34 @@
 *We absolutely recommend to install the mining pool on Linux (not Windows or Mac).*
-Thus, we will only describe how to install on Linux below.
+Thus, we will only describe how to install on Debian Linux (minimal) below.
 
 # Installation steps
 
-First, get the source code and set up all dependecies
+First, install dependencies:
+
 ```
+apt update
+apt install git
+```
+
+Then Docker by following the steps on [docker.com](https://www.docker.com/community-edition#/download) and Docker Compose by following [these steps](https://docs.docker.com/compose/install/).
+
+Next, add a user dedicated to run the mining pool via docker (you can leave all the fields like "full name", "room number", and so empty):
+
+```
+adduser --disabled-password pooladmin
+adduser pooladmin docker
+```
+
+Finally, switch to the new user, get the source code, and build it:
+
+```
+su pooladmin
+cd
 git clone https://github.com/rngkll/nimiqpool-docker
 cd nimiqpool-docker/
 git submodule init
-git submodule update
+git submodule update --remote
 ```
-
-## Docker
-
-Secondly, go to [docker.com](https://www.docker.com/community-edition#/download) and follow the steps to install Docker. 
-
-```
-sudo adduser nimiqpool
-sudo adduser nimiqpool docker
-```
-
-You'll need to manually install Docker Compose by following [these steps](https://docs.docker.com/compose/install/).
 
 ## Get Cerfiticates for the Pool
 
@@ -40,20 +48,22 @@ To enable secure connections to your machine, SSL/TLS certificates are needed.
 [Letsencrypt](https://letsencrypt.org) gives you the ability to get a free certificate, 
 [Certbot](https://certbot.eff.org) is the recommended way to generate a certificate with Letsencrypt.
 
-$$$ copy desc from 'how to install a miner' or refer there
+Install certbot from Let's Encrypt and run it (putting your registered domain name in place):
+
+```
+apt-get install certbot -t stretch-backports
+certbot certonly --standalone -d <your domain name>
+```
 
 ## Change configuration files
 
 Copy the configuration examples to your config directory:
+
 ```
 cp mining-pool/*.sample.conf configs/
 ```
 
-And rename each of them from `.sample.conf` to `.conf`.
-
-## Adjust configuration
-
-$$$ TODO: avoid duplication of config files first!
+Adjust each `.sample.conf` and save them as `.conf`.
 
 ## Deploy the pool
 
